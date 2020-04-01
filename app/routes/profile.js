@@ -16,14 +16,7 @@ function ProfileHandler (db) {
             if (err) return next(err);
             doc.userId = userId;
 
-            // @TODO @FIXME
-            // while the developer intentions were correct in encoding the user supplied input so it
-            // doesn't end up as an XSS attack, the context is incorrect as it is encoding the firstname for HTML
-            // while this same variable is also used in the context of a URL link element
             doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
-            // fix it by replacing the above with another template variable that is used for 
-            // the context of a URL in a link header
-            // doc.doc.firstNameSafeURLString = ESAPI.encoder().encodeForURL(urlInput)
 
             return res.render("profile", doc);
         });
@@ -32,18 +25,11 @@ function ProfileHandler (db) {
     this.handleProfileUpdate = (req, res, next) => {
 
         const {firstName, lastName, ssn, dob, address, bankAcc, bankRouting} = req.body;
-
-        // Fix for Section: ReDoS attack
-        // The following regexPattern that is used to validate the bankRouting number is insecure and vulnerable to
-        // catastrophic backtracking which means that specific type of input may cause it to consume all CPU resources
-        // with an exponential time until it completes
-        // --
-        // The Fix: Instead of using greedy quantifiers the same regex will work if we omit the second quantifier +
-        // const regexPattern = /([0-9]+)\#/;
+       
         const regexPattern = /([0-9]+)+\#/;
-        // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
+
         const testComplyWithRequirements = regexPattern.test(bankRouting);
-        // if the regex test fails we do not allow saving
+
         if (testComplyWithRequirements !== true) {
             const firstNameSafeString = firstName
             return res.render("profile", {
@@ -73,8 +59,6 @@ function ProfileHandler (db) {
 
                 if (err) return next(err);
 
-                // WARN: Applying any sting specific methods here w/o checking type of inputs could lead to DoS by HPP
-                //firstName = firstName.trim();
                 user.updateSuccess = true;
                 user.userId = userId;
 
