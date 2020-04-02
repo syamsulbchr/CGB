@@ -7,7 +7,10 @@ function AllocationsHandler (db) {
 
     this.displayAllocations = (req, res, next) => {
         
-        const {userId} = req.params;
+        //9. vulnerability = Insecure DOR
+        //solusi = ganti parms dengan seasion
+        const { userId } = req.session;
+        //const {userId} = req.params;
         const { threshold } = req.query
 
         allocationsDAO.getByUserIdAndThreshold(userId, threshold, (err, allocations) => {
