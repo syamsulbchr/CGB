@@ -4,7 +4,7 @@ const port = process.env.PORT || 4000;
 let db = process.env.MONGOLAB_URI || process.env.MONGODB_URI;
 
 if (!db) {
-  db = process.env.NODE_ENV === 'test' ? "mongodb://localhost:27017/nodegoat" : "mongodb://nodegoat:owasp@ds159217.mlab.com:59217/nodegoat";
+  db = process.env.NODE_ENV === 'test' ? "mongodb://localhost:27017/alto_test" : "mongodb://nodegoat:owasp@ds159217.mlab.com:59217/alto_test";
 }
 
 module.exports = {

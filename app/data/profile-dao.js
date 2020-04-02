@@ -12,7 +12,6 @@ function ProfileDAO(db) {
 
     const users = db.collection("users");
 
-
     this.updateUser = (userId, firstName, lastName, ssn, dob, address, bankAcc, bankRouting, callback) => {
 
         // Create user document
@@ -38,7 +37,7 @@ function ProfileDAO(db) {
         if (dob) {
             user.dob = dob;
         }
-
+        
 
         users.update({
                 _id: parseInt(userId)
@@ -62,7 +61,7 @@ function ProfileDAO(db) {
             },
             (err, user) => {
                 if (err) return callback(err, null);
-  
+                
 
                 callback(null, user);
             }

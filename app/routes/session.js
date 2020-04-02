@@ -1,6 +1,7 @@
 const UserDAO = require("../data/user-dao").UserDAO;
 const AllocationsDAO = require("../data/allocations-dao").AllocationsDAO;
 
+/* The SessionHandler must be constructed with a connected db */
 function SessionHandler (db) {
     "use strict";
 
@@ -51,47 +52,28 @@ function SessionHandler (db) {
             const invalidPasswordErrorMessage = "Invalid password";
             if (err) {
                 if (err.noSuchUser) {
-                    //console.log('Error: attempt to login with invalid user: ', userName);
+                    console.log('Error: attempt to login with invalid user: ', userName);
 
-                    // 3. Vulnernability = Log Injection 
-                    // Solusi = jangan mengijinkan inputan kedalam log dan bersihkan input pengguna
                     
-                    // - Step 1: tambahkan dukungan
-                    const ESAPI = require('node-esapi');
-                    // - Step 2: Encode pencatatan dalam konteks yang benar
-                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForHTML(userName));
-                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForJavaScript(userName));
-                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForURL(userName));
-                    console.log('Error: attempt to login with invalid user: %s', userName.replace(/(\r\n|\r|\n)/g, '_'));
-
-
                     return res.render("login", {
                         userName: userName,
                         password: "",
-                        // loginError: invalidUserNameErrorMessage
-                        // 5. Vulnerability == penggunaan error dalam  username, password error
-                        // solusi = gunakan errorMessage pengganti invalidUserNameErrorMessage
-                        loginError: errorMessage
+                        loginError: invalidUserNameErrorMessage
+                        
                     });
                 } else if (err.invalidPassword) {
                     return res.render("login", {
                         userName: userName,
                         password: "",
-                        //loginError: invalidPasswordErrorMessage
-                        loginError: errorMessage
+                        loginError: invalidPasswordErrorMessage
+                        
 
                     });
                 } else {
                     return next(err);
                 }
             }
-           // 6. Vulnerability = penyerang bisa mendapatkan id cookie sebelum pengguna masuk
 
-            // Fix the problem by regenerating a session in each login
-            // dengan cara  wrapping  code sebagai function callback dengan menambahkan req.session.regenerate(() => {})   
-            
-            req.session.regenerate(() => {})                
-            
             req.session.userId = user._id;
             return res.redirect(user.isAdmin ? "/benefits" : "/dashboard")
         });
@@ -119,12 +101,7 @@ function SessionHandler (db) {
         const FNAME_RE = /^.{1,100}$/;
         const LNAME_RE = /^.{1,100}$/;
         const EMAIL_RE = /^[\S]+@[\S]+\.[\S]+$/;
-        /*
-        //7. Vulnerability = kombinasi password yang diharuskan teralu lemah 
-        // solusi = setidaknya 8 karakter dengan angka dan huruf kecil dan besar */
-        const PASS_RE =/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-        //const PASS_RE = /^.{1,20}$/;
-
+        const PASS_RE = /^.{1,20}$/;
         
 
         errors.userNameError = "";
@@ -192,7 +169,7 @@ function SessionHandler (db) {
 
                     //prepare data for the user
                     prepareUserData(user, next);
-      
+                    
                     req.session.regenerate(() => {
                         req.session.userId = user._id;
                         // Set userId property. Required for left nav menu links
@@ -211,7 +188,7 @@ function SessionHandler (db) {
 
     this.displayWelcomePage = (req, res, next) => {
         let userId;
-// Vulnerability akses admin lanjutan 
+
         if (!req.session.userId) {
             console.log("welcome: Unable to identify user...redirecting to login");
             return res.redirect("/login");

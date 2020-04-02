@@ -17,6 +17,7 @@ function ProfileHandler (db) {
             doc.userId = userId;
 
             doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
+            
 
             return res.render("profile", doc);
         });
@@ -25,11 +26,12 @@ function ProfileHandler (db) {
     this.handleProfileUpdate = (req, res, next) => {
 
         const {firstName, lastName, ssn, dob, address, bankAcc, bankRouting} = req.body;
-       
+
+        
         const regexPattern = /([0-9]+)+\#/;
-
+        // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
-
+        // if the regex test fails we do not allow saving
         if (testComplyWithRequirements !== true) {
             const firstNameSafeString = firstName
             return res.render("profile", {
@@ -59,6 +61,7 @@ function ProfileHandler (db) {
 
                 if (err) return next(err);
 
+                
                 user.updateSuccess = true;
                 user.userId = userId;
 

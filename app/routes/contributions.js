@@ -19,18 +19,13 @@ function ContributionsHandler (db) {
 
     this.handleContributionsUpdate = (req, res, next) => {
 
-        /* 1. Vulnerability = tidak aman menggunakan eval, ini menyebakan serangan SSJS Injection
-        Solusi = sebagai alternatif maka gunakan parseInt
-        
+        /*jslint evil: true */
+        // Insecure use of eval() to parse inputs
         const preTax = eval(req.body.preTax);
         const afterTax = eval(req.body.afterTax);
         const roth = eval(req.body.roth);
-        */
 
-        const preTax = parseInt(req.body.preTax);
-        const afterTax = parseInt(req.body.afterTax);
-        const roth = eval(req.body.roth);
-
+        
         const { userId } = req.session;
 
         //validate contributions

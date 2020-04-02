@@ -14,12 +14,8 @@
 
                 <form action="/allocations/{{userId}}" method="get" role="search">
                     <div class="form-group">
-                        <!-- 2. Vunerability = NoSQL Injection pada input yang bisa selain angka
-                        solusi = batasi penggunaan hanya angka 0 - 99
-          
-                        <input type="text" class="form-control" placeholder="Stocks Threshold" name="threshold" />-->
-                        <input type="number" min="0" max="99" class="form-control" placeholder="Stocks Threshold" name="threshold" />
-
+                        
+                        <input type="text" class="form-control" placeholder="Stocks Threshold" name="threshold" />
                         <p class="help-block">Using above threshold value, it will return all assets allocation above the specified stocks percentage number.</p>
                     </div>
 

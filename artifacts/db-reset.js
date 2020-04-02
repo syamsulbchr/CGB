@@ -13,27 +13,30 @@ const { db } = require("../config/config");
 const USERS_TO_INSERT = [
     {
         "_id": 1,
-        "userName": "admin",
+        "userName": "ngadmin",
         "firstName": "Node Goat",
         "lastName": "Admin",
-        "password": "Admin_123",
+        "password": "ngadmin_123",
         //"password" : "$2a$10$8Zo/1e8KM8QzqOKqbDlYlONBOzukWXrM.IiyzqHRYDXqwB3gzDsba", // Admin_123
-        "isAdmin": true
+        "isAdmin": true,
+        "status" : 1
     }, {
         "_id": 2,
-        "userName": "user1",
-        "firstName": "John",
-        "lastName": "Doe",
+        "userName": "ronggolawe",
+        "firstName": "Ronggo",
+        "lastName": "Lawe",
         "benefitStartDate": "2030-01-10",
-        "password": "User1_123"
+        "password": "lawe_123",
+        "status" : 1
         // "password" : "$2a$10$RNFhiNmt2TTpVO9cqZElb.LQM9e1mzDoggEHufLjAnAKImc6FNE86",// User1_123
     }, {
         "_id": 3,
-        "userName": "user2",
-        "firstName": "Will",
-        "lastName": "Smith",
+        "userName": "sahid",
+        "firstName": "Raden mas",
+        "lastName": "Sahid",
         "benefitStartDate": "2025-11-30",
-        "password": "User2_123"
+        "password": "sahid_123",
+        "status" : 1
         //"password" : "$2a$10$Tlx2cNv15M0Aia7wyItjsepeA8Y6PyBYaNdQqvpxkIUlcONf1ZHyq", // User2_123
     }];
 

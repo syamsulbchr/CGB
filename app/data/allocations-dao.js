@@ -60,7 +60,7 @@ const AllocationsDAO = function(db){
         const searchCriteria = () => {
 
             if (threshold) {
-  
+                
                 return {
                     $where: `this.userId == ${parsedUserId} && this.stocks > '${threshold}'`
                 };
