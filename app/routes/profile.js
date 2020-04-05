@@ -15,9 +15,15 @@ function ProfileHandler (db) {
         profile.getByUserId(parseInt(userId), (err, doc) => {
             if (err) return next(err);
             doc.userId = userId;
+            /* 
+            Nomor 8 
+            Vulnerability : XXS attack
+            Keteragan :
+            Solusi : 
+            */
+            // doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
 
-            doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
-            
+            doc.doc.firstNameSafeURLString = ESAPI.encoder().encodeForURL(urlInput)
 
             return res.render("profile", doc);
         });
@@ -27,8 +33,16 @@ function ProfileHandler (db) {
 
         const {firstName, lastName, ssn, dob, address, bankAcc, bankRouting} = req.body;
 
-        
-        const regexPattern = /([0-9]+)+\#/;
+        /* 
+        Nomor 9 
+        Vulnerability : ReDoS attack
+        Keteragan : 
+        Solusi : 
+        */
+        //const regexPattern = /([0-9]+)+\#/;
+        const regexPattern = /([0-9]+)\#/;
+
+
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
         // if the regex test fails we do not allow saving

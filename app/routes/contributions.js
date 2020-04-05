@@ -18,13 +18,21 @@ function ContributionsHandler (db) {
     };
 
     this.handleContributionsUpdate = (req, res, next) => {
-
-        /*jslint evil: true */
-        // Insecure use of eval() to parse inputs
+        /*
+        Nomor 2
+        Vulnerability kategori code injection 
+        Keterangan : penggunaan function eval dapat menyebabkan terjadinya code injection
+        Solusi : menganti funtion eval dengan parseInt untuk memastikan tipe value dari parameter yang dinput adalah integer
+        */
+        const preTax = parseInt(req.body.preTax);
+        const afterTax = parseInt(req.body.afterTax);
+        const roth = parseInt(req.body.roth);
+        /*
         const preTax = eval(req.body.preTax);
         const afterTax = eval(req.body.afterTax);
         const roth = eval(req.body.roth);
-
+        */
+        
         
         const { userId } = req.session;
 

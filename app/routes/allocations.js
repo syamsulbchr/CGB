@@ -6,8 +6,14 @@ function AllocationsHandler (db) {
     const allocationsDAO = new AllocationsDAO(db);
 
     this.displayAllocations = (req, res, next) => {
-        
-        const {userId} = req.params;
+        /* 
+        Nomor 1 
+        Vulnerability kategori insecure direct object reference (IDOR)
+        Keterangan : Vulnerability ini menyebabkan orang dapat mengakses informasi yang tidak seharusnya tidak bisa dia akses
+        Solusi : gunakan session untuk pengecekan akses
+        */
+        // const {userId} = req.params;
+        const { userId } = req.session;
         const { threshold } = req.query
 
         allocationsDAO.getByUserIdAndThreshold(userId, threshold, (err, allocations) => {

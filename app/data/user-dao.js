@@ -22,8 +22,15 @@ function UserDAO(db) {
             firstName,
             lastName,
             benefitStartDate: this.getRandomFutureDate(),
-            password //received from request param
-            
+            //password //received from request param
+            /*
+            Nomor 3-a
+            Vulnerability katagori unencripted password
+            Keterangan : password yang diterima dari form input tidak di encript dan menyebabkan password yang disimpan kedalam database menjadi plain text
+            Solusi : password yang di input dari form diconvert kedalam hash encripted terlebih dahulu
+            */
+            password: bcrypt.hashSync(password, bcrypt.genSaltSync())
+
         };
 
         // Add email if set
@@ -54,8 +61,16 @@ function UserDAO(db) {
 
         // Helper function to compare passwords
         const comparePassword = (fromDB, fromUser) => {
-            return fromDB === fromUser;
-            
+            //return fromDB === fromUser;
+             /*
+            Nomor 3-b
+            Vulnerability katagori unencripted password
+            Keterangan : password yang diterima dari form input tidak di encript dan menyebabkan password yang disimpan kedalam database menjadi plain text
+            Solusi : password yang di input dari form diconvert kedalam hash encripted terlebih dahulu
+            */ 
+            return bcrypt.compareSync(fromDB, fromUser);
+           
+          
         }
 
         // Callback to pass to MongoDB that validates a user document

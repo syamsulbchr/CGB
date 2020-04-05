@@ -53,28 +53,58 @@ function SessionHandler (db) {
             if (err) {
                 if (err.noSuchUser) {
                     console.log('Error: attempt to login with invalid user: ', userName);
+                    /*
+                    Nomor 10
+                    Vulnerability : Log Injection 
+                    Keterangan :
+                    Solusi : Require a module that supports encoding
+                    */
 
+                    const ESAPI = require('node-esapi');
+                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForHTML(userName));
+                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForJavaScript(userName));
+                    console.log('Error: attempt to login with invalid user: %s', ESAPI.encoder().encodeForURL(userName));
+                    console.log('Error: attempt to login with invalid user: %s', userName.replace(/(\r\n|\r|\n)/g, '_'));
                     
                     return res.render("login", {
                         userName: userName,
                         password: "",
-                        loginError: invalidUserNameErrorMessage
-                        
+                        /*
+                        Nomor 11-a
+                        Vulnerabiliy : Keterangan pesan error memperlihatkan username 
+                        Keterangan : telihat langsung bahwa username yang salah 
+                        Solusi : samarkan dengan menggunakan invalid username/password 
+                        */
+                        // loginError: invalidUserNameErrorMessage
+                        loginError: errorMessage
+
                     });
                 } else if (err.invalidPassword) {
                     return res.render("login", {
                         userName: userName,
                         password: "",
-                        loginError: invalidPasswordErrorMessage
-                        
+                        /*
+                        Nomor 11-a
+                        Vulnerabiliy : Keterangan pesan error memperlihatkan password 
+                        Keterangan : telihat langsung bahwa password yang salah 
+                        Solusi : samarkan dengan menggunakan invalid username/password 
+                        */                        
+                        // loginError: invalidPasswordErrorMessage
+                        loginError: errorMessage
 
                     });
                 } else {
                     return next(err);
                 }
             }
-
-            req.session.userId = user._id;
+            /*
+            Nomor 12
+            Vulnerabiliy : cookies
+            Keterangan :  
+            Solusi : 
+            */                                    
+            // req.session.userId = user._id;
+            `req.session.regenerate(function() {})`
             return res.redirect(user.isAdmin ? "/benefits" : "/dashboard")
         });
     };
@@ -101,8 +131,16 @@ function SessionHandler (db) {
         const FNAME_RE = /^.{1,100}$/;
         const LNAME_RE = /^.{1,100}$/;
         const EMAIL_RE = /^[\S]+@[\S]+\.[\S]+$/;
-        const PASS_RE = /^.{1,20}$/;
+         /*
+         Nomor 13
+         Vulnerability : password req lemah
+         Keterangan : tidak menggunakan standar password yang kuat 
+         solusi : memastikan pengguna membuat password dengan 8 karakter menggunakan angka, huruf kecil dan huruf besar
+        */
+        var PASS_RE =/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
         
+        // const PASS_RE = /^.{1,20}$/;
+   
 
         errors.userNameError = "";
         errors.firstNameError = "";
@@ -169,7 +207,23 @@ function SessionHandler (db) {
 
                     //prepare data for the user
                     prepareUserData(user, next);
-                    
+                    /*
+                    Nomor 14
+                    Vulnerability : 
+                    Keterangan : 
+                    solusi : 
+                    */
+                    /*
+                    sessionDAO.startSession(user._id, function(err, sessionId) {
+
+                        if (err) return next(err);
+
+                        res.cookie("session", sessionId);
+                        req.session.userId = user._id;
+                        return res.render("dashboard", user);
+                    });
+                    */
+
                     req.session.regenerate(() => {
                         req.session.userId = user._id;
                         // Set userId property. Required for left nav menu links

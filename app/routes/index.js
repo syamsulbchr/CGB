@@ -52,8 +52,18 @@ const index = (app, db) => {
     app.post("/contributions", isLoggedIn, contributionsHandler.handleContributionsUpdate);
 
     // Benefits Page
-    app.get("/benefits", isLoggedIn, benefitsHandler.displayBenefits);
-    app.post("/benefits", isLoggedIn, benefitsHandler.updateBenefits);
+    /* 
+    Nomor 7
+    Vunerability : user role lemah 
+    Keterangan : user selain admin dapat mengakse yang seharusnya tidak dapat diakses
+    Solusi : hanya admin yang mempunyai aksess kontrol 
+    */
+     app.get("/benefits", isLoggedIn, isAdmin, benefitsHandler.displayBenefits);
+     app.post("/benefits", isLoggedIn, isAdmin, benefitsHandler.updateBenefits);
+     
+
+    //app.get("/benefits", isLoggedIn, benefitsHandler.displayBenefits);
+    //app.post("/benefits", isLoggedIn, benefitsHandler.updateBenefits);
     
 
     // Allocations Page

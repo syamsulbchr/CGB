@@ -14,8 +14,15 @@
 
                 <form action="/allocations/{{userId}}" method="get" role="search">
                     <div class="form-group">
-                        
-                        <input type="text" class="form-control" placeholder="Stocks Threshold" name="threshold" />
+                         <!-- 
+                        Nomor 4-b
+                        Vulnerability kategori noSQL injection
+                        Keterangan : limit penggunaan karakter pada input text
+                        Solusi : input filtering     
+                         -->
+                         <input type="number" min="0" max="99" class="form-control" placeholder="Stocks Threshold" name="threshold" />
+                       
+                        <!--<input type="text" class="form-control" placeholder="Stocks Threshold" name="threshold" />-->
                         <p class="help-block">Using above threshold value, it will return all assets allocation above the specified stocks percentage number.</p>
                     </div>
 

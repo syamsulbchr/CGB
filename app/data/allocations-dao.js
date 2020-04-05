@@ -60,10 +60,26 @@ const AllocationsDAO = function(db){
         const searchCriteria = () => {
 
             if (threshold) {
+                  /*
+                  Nomor 4-a
+                  Vulnerability katagori NoSQL injection 
+                  Keterangan : Limit penggunaan karakter pada input text
+                  Solusi : input filtering
+                  
+
+                 1. 0';while(true){}'
+                 2. 1'; return 1 == '1
+                                       
+                const parsedThreshold = parseInt(threshold, 10);
+                */
+                if (parsedThreshold >= 0 && parsedThreshold <= 99) {
+                    return {$where: `this.userId == ${parsedUserId} && this.stocks > ${threshold}`};
+                }
+                throw `The user supplied threshold: ${parsedThreshold} was not valid.`;
                 
-                return {
-                    $where: `this.userId == ${parsedUserId} && this.stocks > '${threshold}'`
-                };
+                //return {
+                //    $where: `this.userId == ${parsedUserId} && this.stocks > '${threshold}'`
+                //};
             }
             return {
                 userId: parsedUserId

@@ -11,7 +11,36 @@ function ProfileDAO(db) {
     }
 
     const users = db.collection("users");
+    /* 
+    Nomor 5-a
+    Vunerability : Sensitive Data Exposure
+    Keterangan : 
+    Solusi :
+    */
+    // Use crypto module to save sensitive data such as ssn, dob in encrypted format
+    var crypto = require("crypto");
+    var config = require("../../config/config");
 
+    /// Helper method create initialization vector
+    // By default the initialization vector is not secure enough, so we create our own
+    var createIV = function() {
+        // create a random salt for the PBKDF2 function - 16 bytes is the minimum length according to NIST
+        var salt = crypto.randomBytes(16);
+        return crypto.pbkdf2Sync(config.cryptoKey, salt, 100000, 512, "sha512");
+    };
+
+    // Helper methods to encryt / decrypt
+    var encrypt = function(toEncrypt) {
+        config.iv = createIV();
+        var cipher = crypto.createCipheriv(config.cryptoAlgo, config.cryptoKey, config.iv);
+        return cipher.update(toEncrypt, "utf8", "hex") + cipher.final("hex");
+    };
+
+    var decrypt = function(toDecrypt) {
+        var decipher = crypto.createDecipheriv(config.cryptoAlgo, config.cryptoKey, config.iv);
+        return decipher.update(toDecrypt, "hex", "utf8") + decipher.final("utf8");
+    };
+    
     this.updateUser = (userId, firstName, lastName, ssn, dob, address, bankAcc, bankRouting, callback) => {
 
         // Create user document
@@ -31,11 +60,24 @@ function ProfileDAO(db) {
         if (bankRouting) {
             user.bankRouting = bankRouting;
         }
+        /*
+        Nomor 6
+        Vulnerability : Sensistive Data Exposure
+        Keterangan : ssn dan DOB yang tidak di Encrypted
+        Solusi : simpan ssn dan DOB dalam bentuk encript 
+        
         if (ssn) {
             user.ssn = ssn;
         }
         if (dob) {
             user.dob = dob;
+        }*/
+       
+        if(ssn) {
+            user.ssn = encrypt(ssn);
+        }
+        if(dob) {
+            user.dob = encrypt(dob);
         }
         
 
@@ -61,6 +103,15 @@ function ProfileDAO(db) {
             },
             (err, user) => {
                 if (err) return callback(err, null);
+                /* 
+                Nomor 5-a
+                Vunerability : Sensitive Data Exposure
+                Keterangan : 
+                Solusi : Decrypt ssn and DOB values to display to user
+                */
+
+                user.ssn = user.ssn ? decrypt(user.ssn) : "";
+                user.dob = user.dob ? decrypt(user.dob) : "";
                 
 
                 callback(null, user);
