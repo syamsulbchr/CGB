@@ -104,13 +104,17 @@ function SessionHandler (db) {
             Solusi : 
             */                                    
             // req.session.userId = user._id;
-            `req.session.regenerate(function() {})`
+            console.log(user)
+            
+            req.session.regenerate(function() {})
+            console.log(req.session)
             return res.redirect(user.isAdmin ? "/benefits" : "/dashboard")
         });
     };
 
     this.displayLogoutPage = (req, res) => {
         req.session.destroy(() => res.redirect("/"));
+
     };
 
     this.displaySignupPage = (req, res) => {

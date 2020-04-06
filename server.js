@@ -162,17 +162,18 @@ MongoClient.connect(db, (err, db) => {
     });
 
     // Insecure HTTP connection
-    http.createServer(app).listen(port, () => {
-        console.log(`Express http server listening on port ${port}`);
-    });
+    // http.createServer(app).listen(port, () => {
+    //   console.log(`Express http server listening on port ${port}`);
+    // });
     /*
     Nomor 15-a
     Vulnerability : sensitive data exposure
     Keterangan : masih menggunakan HTTP yang tidak secure 
     solusi : masukan scrip untuk menjalankan koneksi HTTPS
-
+    */
+    
     https.createServer(httpsOptions, app).listen(config.port,  function() {
         console.log("Express https server listening on port " + config.port);
     });
-    */
+    
 });
