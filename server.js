@@ -20,7 +20,7 @@ Nomor 15-a
 Vulnerability : sensitive data exposure
 Keterangan : masih menggunakan HTTP yang tidak secure 
 solusi : masukan scrip untuk menjalankan koneksi HTTPS
-*/
+
 const fs = require("fs");
 const https = require("https");
 const path = require("path");
@@ -28,7 +28,7 @@ const httpsOptions = {
     key: fs.readFileSync(path.resolve(__dirname, "./artifacts/cert/server.key")),
     cert: fs.readFileSync(path.resolve(__dirname, "./artifacts/cert/server.crt"))
 };
-
+*/
 MongoClient.connect(db, (err, db) => {
     if (err) {
         console.log("Error: DB: connect");
@@ -41,32 +41,32 @@ MongoClient.connect(db, (err, db) => {
     /*
     Nomor 16
     Vulnerability : security misConfig
-    Keterangan :  
-    solusi : 
-    
-    // Remove default x-powered-by response header
+    Keterangan : x-powerd-by akan muncul apabila kita menggunakan aplikasi burpsuit
+    solusi : menghilangkan x-powerd-by di respon hendeler
     app.disable("x-powered-by");
-
-    // Prevent opening page in frame or iframe to protect from clickjacking
+    
+    Keterangan : untuk menghandel page dapat dimasukan xframe clickjacking
+    solusi : menambahkan proteksi helemt pada node.js    
     app.use(helmet.xframe());
 
-    // Prevents browser from caching and storing page
+    Keterangan : untuk menghandel cache storing di page
+    Solusi : menambahkan proteksi untuk cache storing page
     app.use(helmet.noCache());
 
-    // Allow loading resources only from white-listed domains
+    Keterangan : conten security policy
+    solusi : implement content security policy
     app.use(helmet.csp());
 
-    // Allow communication only on HTTPS
+    Keterangan : penggunan HTTP yang tidak secure
+    Solusi : menggunakan hanya HTTPS
     app.use(helmet.hsts());
 
-    // TODO: Add another vuln: https://github.com/helmetjs/helmet/issues/26
-    // Enable XSS filter in IE (On by default)
-    // app.use(helmet.iexss());
-    // Now it should be used in hit way, but the README alerts that could be
-    // dangerous, like specified in the issue.
-     app.use(helmet.xssFilter({ setOnOldIE: true }));
+    Keterangan : protect XSS filtering 
+    Solusi: menambahkan script 
+    app.use(helmet.xssFilter({ setOnOldIE: true }));
 
-    // Forces browser to only use the Content-Type set in the response header instead of sniffing or guessing it
+    Keterangan : memastikan browser menggunakan Conten-Type set
+    Solusi : menambahkan script 
     app.use(nosniff());
     */
 
@@ -162,18 +162,18 @@ MongoClient.connect(db, (err, db) => {
     });
 
     // Insecure HTTP connection
-    // http.createServer(app).listen(port, () => {
-    //   console.log(`Express http server listening on port ${port}`);
-    // });
+        http.createServer(app).listen(port, () => {
+       console.log(`Express http server listening on port ${port}`);
+    });
     /*
     Nomor 15-a
     Vulnerability : sensitive data exposure
     Keterangan : masih menggunakan HTTP yang tidak secure 
     solusi : masukan scrip untuk menjalankan koneksi HTTPS
-    */
     
+
     https.createServer(httpsOptions, app).listen(config.port,  function() {
         console.log("Express https server listening on port " + config.port);
     });
-    
+    */
 });

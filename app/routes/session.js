@@ -103,10 +103,10 @@ function SessionHandler (db) {
             Keterangan :  
             Solusi : 
             */                                    
-            // req.session.userId = user._id;
+            req.session.regenerate(function() {})
+            req.session.userId = user._id;
             console.log(user)
             
-            req.session.regenerate(function() {})
             console.log(req.session)
             return res.redirect(user.isAdmin ? "/benefits" : "/dashboard")
         });

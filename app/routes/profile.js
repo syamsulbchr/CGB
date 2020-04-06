@@ -16,15 +16,15 @@ function ProfileHandler (db) {
             if (err) return next(err);
             doc.userId = userId;
             /* 
-            Nomor 8 
-            Vulnerability : XXS attack
-            Keteragan :
-            Solusi : 
+            Nomor 8-a 
+            Vulnerability : XXS attack Profile 
+            Keterangan : XXS attact profile
+            Solusi : input validation
             */
-            // doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
+            //doc.firstNameSafeString = ESAPI.encoder().encodeForHTML(doc.firstName)
 
-            doc.doc.firstNameSafeURLString = ESAPI.encoder().encodeForURL(urlInput)
-
+            doc.firstNameSafeURLString = ESAPI.encoder().encodeForURL(doc.firstName)
+            doc.firstNameSafeURLString = ESAPI.encoder().encodeForURL(doc.lastName)
             return res.render("profile", doc);
         });
     };
@@ -64,8 +64,17 @@ function ProfileHandler (db) {
 
         profile.updateUser(
             parseInt(userId),
-            firstName,
-            lastName,
+            /* 
+            Nomor 8-b
+            Vulnerability : XXS attack Profile 
+            Keterangan : XXS attact profile
+            Solusi : input validation
+            */
+            // firstName,
+            // lastName,
+
+            ESAPI.encoder().encodeForURL(firstName),
+            ESAPI.encoder().encodeForURL(lastName),
             ssn,
             dob,
             address,
